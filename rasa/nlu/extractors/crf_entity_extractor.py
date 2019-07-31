@@ -132,7 +132,7 @@ class CRFEntityExtractor(EntityExtractor):
 
             # filter out pre-trained entity examples
             filtered_entity_examples = self.filter_trainable_entities(
-                training_data.training_examples
+                training_data.entity_examples
             )
 
             # convert the dataset into features
