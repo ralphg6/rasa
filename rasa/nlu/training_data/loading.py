@@ -32,6 +32,7 @@ RASA = "rasa_nlu"
 MARKDOWN = "md"
 UNK = "unk"
 DIALOGFLOW_RELEVANT = {DIALOGFLOW_ENTITIES, DIALOGFLOW_INTENT}
+WATSON = "watson"
 
 _markdown_section_markers = ["## {}:".format(s) for s in markdown.available_sections]
 _json_format_heuristics = {
@@ -44,6 +45,7 @@ _json_format_heuristics = {
     DIALOGFLOW_ENTITIES: lambda js, fn: "isEnum" in js,
     DIALOGFLOW_INTENT_EXAMPLES: lambda js, fn: "_usersays_" in fn,
     DIALOGFLOW_ENTITY_ENTRIES: lambda js, fn: "_entries_" in fn,
+    WATSON: lambda js, fn: "workspace_id" in js,
 }
 
 
@@ -95,6 +97,7 @@ def _reader_factory(fformat: Text) -> Optional["TrainingDataReader"]:
         LuisReader,
         RasaReader,
         DialogflowReader,
+        WatsonReader
     )
 
     reader = None
@@ -108,6 +111,8 @@ def _reader_factory(fformat: Text) -> Optional["TrainingDataReader"]:
         reader = RasaReader()
     elif fformat == MARKDOWN:
         reader = MarkdownReader()
+    elif fformat == WATSON:
+        reader = WatsonReader()
     return reader
 
 
