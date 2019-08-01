@@ -119,7 +119,7 @@ class TrainingData(object):
         return intent_entity_examples + synonyms_entity_examples + lookup_table_entity_examples
 
     @lazyproperty
-    def all_traning_examples(self) -> List[Message]:
+    def all_training_examples(self) -> List[Message]:
         intent_without_tagged_entities_examples = [ex for ex in self.training_examples if not ex.has_entities()]
         return intent_without_tagged_entities_examples + self.entity_examples
 

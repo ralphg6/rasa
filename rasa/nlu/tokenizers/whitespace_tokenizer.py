@@ -26,7 +26,7 @@ class WhitespaceTokenizer(Tokenizer, Component):
     def train(
         self, training_data: TrainingData, config: RasaNLUModelConfig, **kwargs: Any
     ) -> None:
-        for example in training_data.all_traning_examples:
+        for example in training_data.all_training_examples:
             example.set("tokens", self.tokenize(example.text))
 
     def process(self, message: Message, **kwargs: Any) -> None:
