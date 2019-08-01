@@ -19,8 +19,7 @@ class SpacyTokenizer(Tokenizer, Component):
     def train(
         self, training_data: TrainingData, config: RasaNLUModelConfig, **kwargs: Any
     ) -> None:
-
-        for example in training_data.training_examples:
+        for example in training_data.all_traning_examples:
             example.set("tokens", self.tokenize(example.get("spacy_doc")))
 
     def process(self, message: Message, **kwargs: Any) -> None:

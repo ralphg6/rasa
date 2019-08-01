@@ -101,11 +101,11 @@ class SpacyNLP(Component):
         else:
             return self.nlp(text.lower())
 
-    def docs_for_training_data(self, training_data: TrainingData) -> List[Any]:
+    def docs_for_examples(self, examples: List[Message]) -> List[Any]:
 
         texts = [
             e.text if self.component_config.get("case_sensitive") else e.text.lower()
-            for e in training_data.intent_examples
+            for e in examples
         ]
 
         docs = [doc for doc in self.nlp.pipe(texts, batch_size=50)]
@@ -115,10 +115,10 @@ class SpacyNLP(Component):
     def train(
         self, training_data: TrainingData, config: RasaNLUModelConfig, **kwargs: Any
     ) -> None:
+        examples = training_data.all_training_examples
+        docs = self.docs_for_examples(examples)
 
-        docs = self.docs_for_training_data(training_data)
-
-        for idx, example in enumerate(training_data.training_examples):
+        for idx, example in enumerate(examples):
             example.set("spacy_doc", docs[idx])
 
     def process(self, message: Message, **kwargs: Any) -> None:

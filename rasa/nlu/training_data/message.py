@@ -50,3 +50,6 @@ class Message(object):
         if entities:
             data["entities"] = entities
         return cls(text, data)
+
+    def has_entities(self) -> bool:
+        return self.get("entities")
