@@ -16,6 +16,9 @@ This guide shows you how to migrate your application built with IBM Watson Assis
 
      In addition, our open source tools allow developers to build contextual AI assistants and manage dialogues with machine learning instead of rules - learn more in <a class="reference external" href="http://blog.rasa.com/a-new-approach-to-conversational-software/" target="_blank">this blog post</a>.
 
+.. warning::
+
+     It is important to mention that until now it is not possible to migrate the ``dialog`` functionality. Only intent classification and entity extraction work.
 
 Let's get started with migrating your application from Watson to Rasa:
 
