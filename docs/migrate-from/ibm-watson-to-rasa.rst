@@ -1,27 +1,115 @@
-:desc: Open source alternative to IBM Watson for conversational bots and NLP
+:desc: Open source alternative to Watson Assistant for conversational bots and NLP
 
 .. _ibm-watson-to-rasa:
 
-Rasa as open source alternative to IBM Watson - Migration Tips
-==============================================================
+Rasa as open source alternative to Watson Assistant - Migration Guide
+=====================================================================
 
-.. raw:: html
+This guide shows you how to migrate your application built with IBM Watson Assistant to Rasa. Here are a few reasons why we see developers switching:
 
-     There is no support for IBM Watson yet. However, a group of community members is working on a way to use <a class="reference external" href="https://developer.ibm.com/tutorials/learn-how-to-export-import-a-watson-assistant-workspace/" target="_blank">exported IBM Watson workspaces</a> in Rasa. If you're interested in that, check out our <a class="reference external" href="https://forum.rasa.com/" target="_blank">Community Forum</a>.
-
-
-At Rasa, we hear a few different reasons why developers switch from cloud-based tools like IBM Watson:
-
-* **Faster**: Runs locally - no https requests and server round trips required
+* **Faster**: Runs locally - no http requests and server round trips required
 * **Customizable**: Tune models and get higher accuracy with your data set
-* **Open source**: No risk of vendor lock-in - Rasa comes with an Apache 2.0 licence and you can use it in commercial projects
+* **Open source**: No risk of vendor lock-in - Rasa is under the Apache 2.0 licence and you can use it in commercial projects
 
 
 .. raw:: html
 
      In addition, our open source tools allow developers to build contextual AI assistants and manage dialogues with machine learning instead of rules - learn more in <a class="reference external" href="http://blog.rasa.com/a-new-approach-to-conversational-software/" target="_blank">this blog post</a>.
 
+.. warning::
 
-.. button::
-     :link: ../get_started_step1/
-     :text: Learn more about Rasa
+     It is important to mention that until now it is not possible to migrate the ``dialog`` functionality. Only intent classification and entity extraction work.
+
+Let's get started with migrating your application from Watson to Rasa:
+
+
+Step 1: Export your Training Data from Watson Assistant
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To download a dialog skill, complete the following steps:
+
+* Find the dialog skill tile on the Skills page or on the configuration page of an assistant that uses the skill.
+
+* Click on the three dots menu.
+
+.. image:: ../_static/images/watson_export.png
+   :width: 350
+   :alt: Watson Export
+
+* Select 'Download JSON'. This will download a file with a ``.json`` extension that can be imported directly into Rasa.
+
+Step 2: Create a Rasa Project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To create a Rasa project, run:
+
+.. code-block:: bash
+
+   rasa init
+
+This will create a directory called ``data``. 
+Remove the files in this directory, and
+move your json file into this directory.
+
+.. code-block:: bash
+
+   rm -r data/*
+   mv /path/to/file.json data/
+
+Step 3: Train your NLU model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To train a model using your Watson data, run:
+
+.. code-block:: bash
+
+    rasa train nlu
+
+Step 4: Test your NLU model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's see how your NLU model will interpret some test messages.
+To start a testing session, run:
+
+.. code-block:: bash
+
+   rasa shell nlu
+
+This will prompt your for input.
+Type a test message and press 'Enter'.
+The output of your NLU model will be printed to the screen.
+You can keep entering messages and test as many as you like.
+Press 'control + C' to quit.
+
+
+Step 5: Start a Server with your NLU Model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To start a server with your NLU model, run:
+
+.. code-block:: bash
+
+   rasa run nlu
+
+This will start a server listening on port 5005.
+
+To send a request to the server, run:
+
+.. copyable::
+
+   curl 'localhost:5005/model/parse?emulation_mode=watson' -d '{"text": "hello"}'
+
+The ``emulation_mode`` parameter tells Rasa that you want your json
+response to have the same format as you would get from Watson.
+You can also leave it out to get the result in the usual Rasa format.
+
+Terminology:
+^^^^^^^^^^^^
+
+The words ``intent`` and ``entity`` have the same meaning in Rasa as they do
+in Watson.
+Watson's ``patterns`` feature is very similar to Rasa NLU's `regex features </docs/rasa/nlu/training-data-format/#regular-expression-features>`_
+Watson's ``dialog`` feature does not currently have an equivalent in Rasa NLU.
+
+
+Join the `Rasa Community Forum <https://forum.rasa.com/>`_ and let us know how your migration went!
