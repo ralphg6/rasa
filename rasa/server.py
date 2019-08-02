@@ -228,12 +228,16 @@ def _create_emulator(mode: Optional[Text]) -> NoEmulator:
         from rasa.nlu.emulators.dialogflow import DialogflowEmulator
 
         return DialogflowEmulator()
+    elif mode.lower() == "watson":
+        from rasa.nlu.emulators.watson import WatsonEmulator
+
+        return WatsonEmulator()    
     else:
         raise ErrorResponse(
             400,
             "BadRequest",
             "Invalid parameter value for 'emulation_mode'. "
-            "Should be one of 'WIT', 'LUIS', 'DIALOGFLOW'.",
+            "Should be one of 'WIT', 'LUIS', 'DIALOGFLOW', 'WATSON'.",
             {"parameter": "emulation_mode", "in": "query"},
         )
 
